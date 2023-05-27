@@ -6,10 +6,9 @@ public class GridImpl implements Grid {
   private PieceColour[][] grid;
 
   public GridImpl(int size) {
-    // ** anti-bugging tests for catching invalid sizes??? may not be needed
     this.size = size;
 
-    // Creates a grid in the given size 
+    // Creates a 2D grid in the given size 
     grid = new PieceColour[size][size];
 
     // Initialises every piece with PieceColour.NONE to represent an empty grid
@@ -18,7 +17,7 @@ public class GridImpl implements Grid {
         grid[i][j] = PieceColour.NONE;
   }
 
-  // Returns the size of the square grid (i.e. the length of one side of the square)
+  // Returns the size of the grid (i.e. the length of one side of the square)
   @Override
   public int getSize() {
     return size;
@@ -32,7 +31,7 @@ public class GridImpl implements Grid {
       throw new IllegalArgumentException("The inputted row or column is out of bounds.");
     
     // Returns the colour of the specified piece
-    // PieceColour.NONE (the default colour) will be returned if the position is empty.
+    // PieceColour.NONE (the initial colour) will be returned if the position is empty.
     return grid[row][col];
   }
 
@@ -46,20 +45,20 @@ public class GridImpl implements Grid {
     // Throws IllegalArgumentException if the piece is not a valid colour
     // Though players can only use black or white pieces, PieceColour.NONE is included in the test below as this setPiece method is applied in the copy() method below for copying empty pieces.
     if (piece != PieceColour.NONE && piece != PieceColour.WHITE && piece != PieceColour.BLACK)
-    throw new IllegalArgumentException("The inputted colour is invalid.");
+      throw new IllegalArgumentException("The inputted colour is invalid.");
     
     // Sets the colour of the specified piece
     grid[row][col] = piece;
   }
 
-  // Returns a copy of the grid with changes in piece colour (if any)
+  // Creates and returns a copy of this.grid
   @Override
   public Grid copy() {
     // The grid returned is a deep copy (i.e. a new object "copy").
-    // So that there is no way to modify this.grid by modifying the "copy" returned by this method.
+    // So that there is no way to modify this.grid by modifying the "copy" returned.
     GridImpl copy = new GridImpl(size);
 
-    // Copies all PieceColour in this.grid to the "copy"
+    // Copies all pieces in this.grid to the "copy"
     for (int i = 0; i < size; i++)
       for (int j = 0; j < size; j++)
         copy.setPiece(i, j, getPiece(i, j));

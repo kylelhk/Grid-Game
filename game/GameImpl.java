@@ -1,6 +1,7 @@
 package game;
 
-import java.util.Collection;
+// For using classes from the java.util package, such as Collection and ArrayList
+import java.util.*;
 
 // A game class implementing all the methods in the game interface
 public class GameImpl implements Game {

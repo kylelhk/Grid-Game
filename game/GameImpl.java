@@ -19,7 +19,7 @@ public class GameImpl implements Game {
     // Creates an empty grid for starting a game
     grid = new GridImpl(size);
     
-    // White player starts first
+    // White player always starts first
     currentPlayer = PieceColour.WHITE;
   }
 
@@ -61,7 +61,7 @@ public class GameImpl implements Game {
   @Override
   public Collection<Move> getMoves() {
     // Creates an ArrayList "validMoves" for storing all valid moves currently available in the grid
-    ArrayList<Move> validMoves = new ArrayList<>();
+    Collection<Move> validMoves = new ArrayList<>();
 
     // Adds a Move / MoveImpl object to "validMoves" if the relevant position is unoccupied (i.e. PieceColour = NONE)
     for (int row = 0; row < size; row++) {

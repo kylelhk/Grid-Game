@@ -24,9 +24,7 @@ public class GameTest extends Test {
     }
     expect(false, caught);
     
-    
-    // **To set a test range starting from size 2 by using for loop (*exclude size 1)
-    // ** A separate set of tests for size 1
+    // **??? to set a size range for test by using for loop???
     // Sets a typical grid size for tests
     int size = 5;
 
@@ -59,18 +57,9 @@ public class GameTest extends Test {
     expect(PieceColour.NONE, test.winner());
 
     // If the game is a draw, true for isOver() and PieceColour.NONE for winner() should be returned.
-    if (size % 2 == 1) {
-      for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
-          test.makeMove(new MoveImpl(i, j));
-    } else {
-      for (int i = 0; i < size - 1; i++)
-        for (int j = 0; j < size; j++)
-          test.makeMove(new MoveImpl(i, j));
-      for (int j = 1; j < size; j++)
-        test.makeMove(new MoveImpl(size - 1, j));
-      test.makeMove(new MoveImpl(size - 1, 0));
-    }
+    for (int i = 0; i < size; i++)
+      for (int j = 0; j < size; j++)
+        test.makeMove(new MoveImpl(i, j));
     expect(true, test.isOver());
     expect(PieceColour.NONE, test.winner());
 
@@ -84,10 +73,10 @@ public class GameTest extends Test {
     
     // If the grid has not been fully occupied but there is a winner, true for isOver() and the winner's colour for winner() should be returned.
     test = new GameImpl(size);
-    for (int i = 0; i < size - 1; i++)
+    for (int i = 0; i < 4; i++)
       for (int j = 0; j < 2; j++)
         test.makeMove(new MoveImpl(i, j));
-    test.makeMove(new MoveImpl(size - 1, 0));
+    test.makeMove(new MoveImpl(4, 0));
     expect(true, test.isOver());
     expect(PieceColour.WHITE, test.winner());
 
@@ -132,24 +121,15 @@ public class GameTest extends Test {
 
     // Fully occupied grid - no valid move should be available
     test = new GameImpl(size);
-    if (size % 2 == 1) {
-      for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
-          test.makeMove(new MoveImpl(i, j));
-    } else {
-      for (int i = 0; i < size - 1; i++)
-        for (int j = 0; j < size; j++)
-          test.makeMove(new MoveImpl(i, j));
-      for (int j = 1; j < size; j++)
-        test.makeMove(new MoveImpl(size - 1, j));
-      test.makeMove(new MoveImpl(size - 1, 0));
-    }
+    for (int i = 0; i < size; i++)
+      for (int j = 0; j < size; j++)
+        test.makeMove(new MoveImpl(i, j));
     moves = test.getMoves();
     expect(0, moves.size());
 
     // The elements in the Collection should correspond to the unoccupied positions in the grid
     test = new GameImpl(size);
-    test.makeMove(new MoveImpl(size - 1, size - 1));
+    test.makeMove(new MoveImpl(2, 2));
     Collection<Move> collection = test.getMoves();
     // Ensures that every move in the collection is valid:
     result = true;
@@ -260,16 +240,20 @@ public class GameTest extends Test {
     // The grid should be updated correctly to reflect the move.
     test = new GameImpl(size);
     test.makeMove(new MoveImpl(0, 0));
+    test.makeMove(new MoveImpl(1, 1));
     test.makeMove(new MoveImpl(size - 1, size - 1));
     expect(PieceColour.WHITE, test.getGrid().getPiece(0, 0));
-    expect(PieceColour.BLACK, test.getGrid().getPiece(size - 1, size - 1));
+    expect(PieceColour.BLACK, test.getGrid().getPiece(1, 1));
+    expect(PieceColour.WHITE, test.getGrid().getPiece(size - 1, size - 1));
 
     // The current player should be changed to the other colour after the move is made.
     test = new GameImpl(size);
     test.makeMove(new MoveImpl(0, 0));
     expect(PieceColour.BLACK, test.currentPlayer());
-    test.makeMove(new MoveImpl(size - 1, size - 1));
+    test.makeMove(new MoveImpl(1, 1));
     expect(PieceColour.WHITE, test.currentPlayer());
+    test.makeMove(new MoveImpl(size - 1, size - 1));
+    expect(PieceColour.BLACK, test.currentPlayer());
 
 
     // Part 5 - Tests for getGrid() and copy() Methods
@@ -279,12 +263,9 @@ public class GameTest extends Test {
     Grid grid = test.getGrid();
     expect(grid, test.getGrid()); */
 
-    test = new GameImpl(size);
-    test.makeMove(new MoveImpl(0, 0));
-    test.makeMove(new MoveImpl(size - 1, size - 1));
-    Game copy = test.copy();
-
     // The grid sizes of the copy and the original should be the same.
+    test = new GameImpl(size);
+    Game copy = test.copy();
     expect(test.getGrid().getSize(), copy.getGrid().getSize());
 
     // The grid contents of the copy and the original should be the same.
@@ -301,8 +282,6 @@ public class GameTest extends Test {
     expect(test.currentPlayer(), copy.currentPlayer());
 
     // The copy should be independent of the original.
-    test = new GameImpl(size);
-    copy = test.copy();
     copy.makeMove(new MoveImpl(0, 0));
     expect(PieceColour.NONE, test.getGrid().getPiece(0, 0));
 

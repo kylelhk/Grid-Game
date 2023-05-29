@@ -1,6 +1,6 @@
 package game;
 
-// Returns the row and column of the current move made by a player
+// Manages the moves by implementing all the methods in the move interface
 public class MoveImpl implements Move {
   private int row, col;
   

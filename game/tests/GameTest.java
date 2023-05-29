@@ -110,10 +110,6 @@ public class GameTest extends Test {
       expect(true, test.isOver());
       expect(PieceColour.WHITE, test.winner());
 
-      // ***[any others???]
-
-
-
       // Section 2.3 - Tests for getMoves() method
 
       // Initial empty grid - all positions should be available as valid moves
@@ -258,12 +254,6 @@ public class GameTest extends Test {
       copy.makeMove(new MoveImpl(size - 1, size - 1));
       expect(PieceColour.NONE, test.getGrid().getPiece(0, 0));
       expect(PieceColour.NONE, test.getGrid().getPiece(size - 1, size - 1));
-
-      // Section 2.6 - Other tests
-
-      // [any???]
-    
-    
     }
 
     // Section 3 - Tests for specific sizes and moves
@@ -293,19 +283,71 @@ public class GameTest extends Test {
     expect(true, test.isOver());
     expect(PieceColour.WHITE, test.winner());
 
-    // If a player wins by the last move upon which the grid is fully occupied, true for isOver() and the winner's colour for winner() should be returned.
-    test = new GameImpl(3);
-    int[][] winAtLast = {
-      {0, 0}, {0, 1}, {1, 1}, {1, 2}, {1, 0}, {0, 2}, {2, 2}, {2, 1}
+    // If the grid is not fully occupied and a player wins by creating a path from the top row to the bottom row, true for isOver() and the winner's colour for winner() should be returned.
+    test = new GameImpl(5);
+    int[][] topBottom = {
+      {2, 2}, {0, 0}, {1, 0}, {0, 4}, {1, 4}, {4, 2}, {2, 0}, {4, 1},
+      {3, 0}, {0, 3}, {4, 0}, {3, 2}, {0, 2}, {3, 3}, {3, 4}, {3, 1},
+      {2, 4}, {2, 3}, {4, 3}
     };
-    for (int i = 0; i < winAtLast.length; i++)
-      test.makeMove(new MoveImpl(winAtLast[i][0], winAtLast[i][1]));
+    for (int i = 0; i < topBottom.length; i++)
+      test.makeMove(new MoveImpl(topBottom[i][0], topBottom[i][1]));
     expect(false, test.isOver());
     expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.BLACK, test.currentPlayer());
+
+    test.makeMove(new MoveImpl(1, 3));
+    expect(true, test.isOver());
+    expect(PieceColour.BLACK, test.winner());
+    
+    test = new GameImpl(5);
+    int[][] topBottom2 = {
+      {1, 4}, {0, 0}, {4, 1}, {3, 0}, {1, 0}, {2, 2}, {0, 2}, {3, 2},
+      {0, 3}, {0, 1}, {1, 2}, {1, 1}, {2, 3}, {2, 1}, {1, 3}, {3, 1},
+      {3, 3}
+    };
+    for (int i = 0; i < topBottom2.length; i++)
+      test.makeMove(new MoveImpl(topBottom2[i][0], topBottom2[i][1]));
+    expect(false, test.isOver());
+    expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.BLACK, test.currentPlayer());
+
+    test.makeMove(new MoveImpl(4, 0));
+    expect(true, test.isOver());
+    expect(PieceColour.BLACK, test.winner());
+
+    // If the grid is not fully occupied and a player wins by creating a path from the left column to the right column, true for isOver() and the winner's colour for winner() should be returned.
+    test = new GameImpl(5);
+    int[][] leftRight = {
+      {1, 4}, {4, 4}, {1, 3}, {4, 3}, {1, 2}, {3, 2}, {2, 4}, {2, 1},
+      {1, 1}, {1, 0}, {3, 4}, {0, 0}, {0, 4}, {3, 1}, {2, 2}, {3, 3},
+      {4, 0}
+    };
+    for (int i = 0; i < leftRight.length; i++)
+      test.makeMove(new MoveImpl(leftRight[i][0], leftRight[i][1]));
+    expect(false, test.isOver());
+    expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.BLACK, test.currentPlayer());
 
     test.makeMove(new MoveImpl(2, 0));
     expect(true, test.isOver());
-    expect(PieceColour.WHITE, test.winner());
+    expect(PieceColour.BLACK, test.winner());
+    
+    test = new GameImpl(5);
+    int[][] leftRight2 = {
+      {4, 0}, {0, 0}, {4, 1}, {1, 1}, {4, 2}, {2, 2}, {4, 3}, {3, 3},
+      {3, 2}, {4, 4}, {2, 1}, {3, 4}, {1, 0}, {2, 3}, {0, 4}, {1, 2},
+      {1, 3}
+    };
+    for (int i = 0; i < leftRight2.length; i++)
+      test.makeMove(new MoveImpl(leftRight2[i][0], leftRight2[i][1]));
+    expect(false, test.isOver());
+    expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.BLACK, test.currentPlayer());
+
+    test.makeMove(new MoveImpl(0, 1));
+    expect(true, test.isOver());
+    expect(PieceColour.BLACK, test.winner());
 
     // If the grid is not fully occupied and a player wins by occupying a row and a column at the same time, true for isOver() and the winner's colour for winner() should be returned.
     test = new GameImpl(4);
@@ -317,6 +359,7 @@ public class GameTest extends Test {
       test.makeMove(new MoveImpl(rowAndCol[i][0], rowAndCol[i][1]));
     expect(false, test.isOver());
     expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.WHITE, test.currentPlayer());
 
     test.makeMove(new MoveImpl(2, 1));
     expect(true, test.isOver());
@@ -331,6 +374,7 @@ public class GameTest extends Test {
       test.makeMove(new MoveImpl(rowAndCol2[i][0], rowAndCol2[i][1]));
     expect(false, test.isOver());
     expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.WHITE, test.currentPlayer());
 
     test.makeMove(new MoveImpl(4, 4));
     expect(true, test.isOver());
@@ -346,17 +390,26 @@ public class GameTest extends Test {
       test.makeMove(new MoveImpl(twoPath[i][0], twoPath[i][1]));
     expect(false, test.isOver());
     expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.WHITE, test.currentPlayer());
 
     test.makeMove(new MoveImpl(2, 1));
     expect(true, test.isOver());
     expect(PieceColour.WHITE, test.winner());
 
-    // ** test special cases re bugs in PathFinder, e.g. topToBottom() and leftToRight()
-    
+    // If a player wins by the last move upon which the grid is fully occupied, true for isOver() and the winner's colour for winner() should be returned.
+    test = new GameImpl(3);
+    int[][] winAtLast = {
+      {0, 0}, {0, 1}, {1, 1}, {1, 2}, {1, 0}, {0, 2}, {2, 2}, {2, 1}
+    };
+    for (int i = 0; i < winAtLast.length; i++)
+      test.makeMove(new MoveImpl(winAtLast[i][0], winAtLast[i][1]));
+    expect(false, test.isOver());
+    expect(PieceColour.NONE, test.winner());
+    expect(PieceColour.WHITE, test.currentPlayer());
 
-    // [debug by playing with AI?]
-
-    
+    test.makeMove(new MoveImpl(2, 0));
+    expect(true, test.isOver());
+    expect(PieceColour.WHITE, test.winner());
 
     checkAllTestsPassed();
   }

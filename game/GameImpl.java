@@ -3,7 +3,7 @@ package game;
 // For using classes from the java.util package, such as Collection and ArrayList
 import java.util.*;
 
-// A game class implementing all the methods in the game interface
+// Manages the game by implementing all the methods in the game interface
 public class GameImpl implements Game {
   private int size;
   private Grid grid;

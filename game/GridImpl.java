@@ -1,10 +1,11 @@
 package game;
 
-// A grid class implementing all the methods in the grid interface
+// Manages the grid by implementing all the methods in the grid interface
 public class GridImpl implements Grid {
   private int size;
   private PieceColour[][] grid;
 
+  // A constructor consistent with game.tests.GridTest
   public GridImpl(int size) {
     this.size = size;
 
